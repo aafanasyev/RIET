@@ -1,11 +1,7 @@
-import os
-rawFramesDir = "frames"
-rawFramesExt = ".dng"
-
-def listOfFrames(framesDir, framesExt):
-        for root, dirs, files in os.walk(framesDir):
-            for file in files:
-                if file.endswith(framesExt):
-                     return(os.path.join(root, file))
-
-print(listOfFrames(rawFramesDir, rawFramesExt))
+d={}
+dlist=[]
+for i in range(0,3):
+    d['data']=i
+    dlist.append(d.copy())
+    print(d)
+print(dlist)
