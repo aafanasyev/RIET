@@ -3,6 +3,7 @@ import sys
 import rawpy
 import pyexifinfo as pyexif
 import json
+from operator import itemgetter
 
 """"Configuration"""
 rawFramesDir = "frames"
@@ -44,34 +45,38 @@ class MainApp(object):
       return count
 
 # prints a list with element consisting of a dictionary key (creation data) and dictionary value (path to frame)
+    #def listFramesIn
 
     def listCreationDateOrderedFrames(frames_Directory, frames_Extension):
-        framesCreationDate_PathToFrameDict= {}
-        framesSortedByCreationList = []
+        framesPathList = []
+        framesCreationDateList = []
+
         for file in os.listdir(frames_Directory):
             if file.endswith(frames_Extension):
-                #for i in xrange(0, framesCounterInDirectory):
+                #add path to frame to the list
                 pathToFrame=os.path.join(frames_Directory,file)
+                framesPathList.append(pathToFrame)
+                #Read Frame Creation Date and add to the List
                 exifData = pyexif.get_json(pathToFrame)
                 encodedSortedJSONExifData = json.dumps( exifData, sort_keys=True, indent=4, separators=(',', ': '))
                 decodedSortedJSONExifData = json.loads(encodedSortedJSONExifData)
                 frameCreationDate = decodedSortedJSONExifData[0]["EXIF:DateTimeOriginal"]
-                framesCreationDate_PathToFrameDict[frameCreationDate] = pathToFrame
-                framesSortedByCreationList.append(framesCreationDate_PathToFrameDict.copy())
-                #unorderedByCreationDateFramesList.append(pathToFrame)
-        return framesSortedByCreationList 
+                framesCreationDateList.append (frameCreationDate)
+        # merge lists to a dictionary and sort using json
+        framesCreationDate_PathToFrameDict = dict(zip(framesCreationDateList, framesPathList))
+        framesCreationDate_PathToFrameDictSorted = json.dumps( framesCreationDate_PathToFrameDict, sort_keys=True, indent=4, separators=(',', ': '))
+        return framesCreationDate_PathToFrameDictSorted
+
+#get frame
+        def getEncodedJSONSortedFramesList(framesList):
+            pass
+
 
 if __name__ == '__main__':
 
 #    print (MainApp().main())
 #    pathToFrame = MainApp.listFramesDirectory(rawFramesDir,rawFramesExt)[0] 
 #    print (pathToFrame)
-#    exifData = pyexif.get_json(pathToFrame)
-#    jsonEncodedSortedExifData = json.dumps( exifData, sort_keys=True, indent=4, separators=(',', ': '))
-#    jsonDecodedSortedExifData = json.loads(jsonEncodedSortedExifData)
-#    print (jsonDecodedSortedExifData[0]["EXIF:DateTimeOriginal"])
-#    print (jsonEncodedSortedExifData)
-#    "XMP:DateCreated": "2013:10:21 14:55:26"
 
 #print dictionary with key as creation data of an image and value path to this image.
 
