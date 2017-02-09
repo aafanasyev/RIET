@@ -46,20 +46,20 @@ class MainApp(object):
 # prints a list with element consisting of a dictionary key (creation data) and dictionary value (path to frame)
 
     def listCreationDateOrderedFrames(frames_Directory, frames_Extension):
-        creationDateAndPathOfFrameDict= {}
-        unorderedByCreationDateFramesList = []
-        for root, dirs, files in os.walk(frames_Directory):
-            for file in files:
-                if file.endswith(frames_Extension):
-                    for i in xrange(0, framesCounterInDirectory):
-                        pathToFrame=os.path.join(root,file)
-                        exifData = pyexif.get_json(pathToFrame)
-                        jsonEncodedSortedExifData = json.dumps( exifData, sort_keys=True, indent=4, separators=(',', ': '))
-                        jsonDecodedSortedExifData = json.loads(jsonEncodedSortedExifData)
-                        DateOfCreation = jsonDecodedSortedExifData[0]["EXIF:DateTimeOriginal"]
-                        creationDateAndPathOfFrameDict[DateOfCreation] = pathToFrame
-                        unorderedByCreationDateFramesList.append(creationDateAndPathOfFrameDict.copy())
-        return unorderedByCreationDateFramesList  
+        framesCreationDate_PathToFrameDict= {}
+        framesSortedByCreationList = []
+        for file in os.listdir(frames_Directory):
+            if file.endswith(frames_Extension):
+                #for i in xrange(0, framesCounterInDirectory):
+                pathToFrame=os.path.join(frames_Directory,file)
+                exifData = pyexif.get_json(pathToFrame)
+                encodedSortedJSONExifData = json.dumps( exifData, sort_keys=True, indent=4, separators=(',', ': '))
+                decodedSortedJSONExifData = json.loads(encodedSortedJSONExifData)
+                frameCreationDate = decodedSortedJSONExifData[0]["EXIF:DateTimeOriginal"]
+                framesCreationDate_PathToFrameDict[frameCreationDate] = pathToFrame
+                framesSortedByCreationList.append(framesCreationDate_PathToFrameDict.copy())
+                #unorderedByCreationDateFramesList.append(pathToFrame)
+        return framesSortedByCreationList 
 
 if __name__ == '__main__':
 
