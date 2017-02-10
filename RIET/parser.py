@@ -1,11 +1,11 @@
 import os
 import sys
 import rawpy
-from PIL import Image
+#from PIL import Image
 import numpy as np
-from scipy import misc
+#from scipy import misc
 
-raw_file="img/WP_20131021_14_55_29_Pro.dng"
+raw_file="frames/WP_20131021_14_55_29_Pro.dng"
 #raw_file="img/WP_20161203_11_12_20_Pro.jpg"
 
 raw = rawpy.imread(raw_file)
