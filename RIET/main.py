@@ -69,6 +69,7 @@ class MainApp(object):
 
 #get frame
         def getEncodedJSONSortedFramesList(framesList):
+            for frame in framesList:
             pass
 
 
@@ -80,8 +81,9 @@ if __name__ == '__main__':
 
 #print dictionary with key as creation data of an image and value path to this image.
 
-    listOfFrames = MainApp.listCreationDateOrderedFrames(rawFramesDir,rawFramesExt)
-    print(listOfFrames) 
+    listOfOrderedFrames = MainApp.listCreationDateOrderedFrames(rawFramesDir,rawFramesExt)
+    print(listOfOrderedFrames)
+
 
 
     #print (fileType(MainApp.listFramesDirectory(rawFramesDir,rawFramesExt)[0]))
