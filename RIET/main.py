@@ -48,7 +48,7 @@ class MainApp(object):
 # prints a list with element consisting of a dictionary key (creation data) and dictionary value (path to frame)
     #def listFramesIn
 
-    def listCreationDateOrderedFrames(frames_Directory, frames_Extension):
+    def framesSortedByCreationDateInJSON(frames_Directory, frames_Extension):
         framesPathList = []
         framesCreationDateList = []
 
@@ -72,10 +72,10 @@ class MainApp(object):
     def getEncodedJSONSortedFramesList(framesList):
         getDecodedJSONSortedFrameList = json.loads(framesList)
 #get frames from json, sort it, read image RGB matrix, read green values, write.
-        valuesList = []
+        framesKeySortedPathList = []
         for key in sorted(getDecodedJSONSortedFrameList):
             #print (getDecodedJSONSortedFrameList[key])
-            valuesList.append(getDecodedJSONSortedFrameList[key])
+            framesKeySortedPathList.append(getDecodedJSONSortedFrameList[key])
             raw = rawpy.imread(getDecodedJSONSortedFrameList[key])
 #convert Bayer pattern in to a list:
             #print ("Bayer pattern:\n",raw.raw_pattern)
@@ -88,16 +88,22 @@ class MainApp(object):
             bayerColorDescList = list(raw.color_desc.decode("utf-8"))
             #print ("Indices 0,1,2,3: ", bayerColorDescList)
             rawBayerPatternColorDic = dict(zip(bayerRawPatternList, bayerColorDescList))
-            print (rawBayerPatternColorDic.value('G'))
+            print (rawBayerPatternColorDic)
+# select only indices related to green colored filter
+            greenPixelsIndicesList = []
+            for key, values in rawBayerPatternColorDic.items():
+                if values == 'G':
+                    greenPixelsIndicesList.append(key)
+            print (greenPixelsIndicesList)
 # read pixel data of an image and save it in a binary file
             print ("Height of the image:",raw.sizes[0],"\nWidth of the image:",raw.sizes[1])
             for column in range(0, raw.sizes[0]):
                 for row in range(0, raw.sizes[1]):
-                    pass
-                    #if ( raw.raw_color(row, column) = rawBayerPatternColorDic.value
-                    #print (raw.raw_value(column, row))          
+                    if raw.raw_color(row, column) == greenPixelsIndicesList[0] or raw.raw_color(row, column) == greenPixelsIndicesList[1]:
+                        print (raw.raw_value(column, row)) 
+#TODO numbers to plot
 #
-        return valuesList
+        return framesKeySortedPathList, rawBayerPatternColorDic
 
 if __name__ == '__main__':
 
@@ -107,7 +113,7 @@ if __name__ == '__main__':
 
 #print dictionary with key as creation data of an image and value path to this image.
 
-    listOfOrderedFrames = MainApp.listCreationDateOrderedFrames(rawFramesDir,rawFramesExt)
+    listOfOrderedFrames = MainApp.framesSortedByCreationDateInJSON(rawFramesDir,rawFramesExt)
     print(listOfOrderedFrames)
     rawImagesPixelsData = MainApp.getEncodedJSONSortedFramesList(listOfOrderedFrames)
     print(rawImagesPixelsData)
